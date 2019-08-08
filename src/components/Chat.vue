@@ -4,7 +4,10 @@
       <input type="button" @click="setUserName" value="Asignar nombre de usuario"/>
     </div>
     <div id="messages-container" v-else>
-      <div id="messages">
+      <div v-if="!isConnected">
+        <h3>Intentando reconectar...</h3>
+      </div>
+      <div v-else id="messages">
         <Message v-for="message in chat" :key="message.id" :message="message" :user="user" />
       </div>
       <form @submit.prevent="send">
@@ -16,26 +19,25 @@
 </template>
 
 <script>
-import io from 'socket.io-client';
 import swal from 'sweetalert'
 import Message from "./Message";
 
 export default {
   data: function() {
     return {
+      isConnected: false,
       chat: [],
       user: {
         id: -1,
         userName: ''
       },
       message: {
-        id: 0,
+        id: '',
         userId: "1",
         userName: '',
         text: "",
         incoming: false
-      },
-      socket: {}
+      }
     };
   },
   components: {
@@ -44,10 +46,10 @@ export default {
   methods: {
     send: function() {
       let vm = this;
-      vm.message.id += 1;
+      vm.message.id = `${vm.user.userName}_${vm.chat.length}`;
       vm.message.userId = vm.user.id;
       vm.message.userName = vm.user.userName;
-      vm.socket.emit('chat message', vm.message);
+      vm.$socket.emit('chatMessage', vm.message);
       vm.message.text = '';
     },
     receive: function(msg) {
@@ -66,7 +68,7 @@ export default {
           if(userName != null) {
             vm.user.id = Math.round(Math.random()*10000);
             vm.user.userName = userName;
-            vm.socket.emit('connected', userName);
+            vm.$socket.emit('connected', userName);
 
             setTimeout(function() {
               document.getElementById('message-text').focus();
@@ -76,12 +78,19 @@ export default {
         .catch(err => swal('Error', ''+err, 'error'));
     }
   },
-  mounted: function() {
-    let vm = this;
-    vm.socket = io.connect("http://192.168.60.140:8082");
-
-    vm.socket.on('connected', vm.receive)
-    vm.socket.on("chat message", vm.receive);
+  sockets: {
+    connect: function() {
+      this.isConnected = true;
+    },
+    disconnect: function() {
+      this.isConnected = false;
+    },
+    connected: function(message){
+      this.receive(message);
+    },
+    chatMessage: function(message){
+      this.receive(message);
+    }
   }
 };
 </script>
