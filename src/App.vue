@@ -24,6 +24,14 @@ export default {
   color: #2c3e50;
 }
 
+html, body {
+  height: 100%;
+}
+
+#app{
+  height: 100%;;
+}
+
 body {
   background-image: url('./assets/chat-background.png');
   background-repeat: repeat;

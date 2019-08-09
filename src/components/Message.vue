@@ -2,7 +2,6 @@
     <div class="message">
         <div class="chat-bubble" :class="{ incoming: incoming, broadcast: message.isBroadcast }">
             <span v-if="!message.isBroadcast" class="username">{{ message.userName }}:</span>
-            <br v-if="!message.isBroadcast"/>
             {{ message.text }}
         </div>
     </div>
