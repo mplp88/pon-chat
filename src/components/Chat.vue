@@ -10,7 +10,9 @@
     </div>
     <div v-else>
       <div id="contacts-container">
-
+        <div class="contact" v-for="contact in contacts" v-bind:key="contact.id">
+          <img src="" alt="" class="contact-img"> {{ contact.userName }}
+          </div>
       </div>
       <div id="messages-container">
         <div v-if="!isConnected">
@@ -31,7 +33,7 @@
 </template>
 
 <script>
-import swal from 'sweetalert'
+//import swal from 'sweetalert'
 import Message from "./Message";
 
 export default {
@@ -40,6 +42,7 @@ export default {
       isConnected: false,
       useName: '',
       chat: [],
+      contacts: [],
       user: {
         id: -1,
         userName: ''
@@ -76,7 +79,7 @@ export default {
       if(this.userName != null && this.userName != '') {
         vm.user.id = Math.round(Math.random()*10000);
         vm.user.userName = this.userName;
-        vm.$socket.emit('userConnected', this.userName);
+        vm.$socket.emit('userConnected', this.user);
 
         setTimeout(function() {
           document.getElementById('message-text').focus();
@@ -86,7 +89,7 @@ export default {
     disconnectUser: function() {
       let vm = this;
 
-      vm.$socket.emit('userDisconnected', vm.user.userName);
+      vm.$socket.emit('userDisconnected', vm.user);
     }
   },
   sockets: {
@@ -96,11 +99,13 @@ export default {
     disconnect: function() {
       this.isConnected = false;
     },
-    userConnected: function(message) {
-      this.receive(message);
+    userConnected: function(payload) {
+      this.receive(payload.msg);
+      this.contacts = payload.contacts;
     },
-    userDisconnected: function(message) {
-      this.receive(message);
+    userDisconnected: function(payload) {
+      this.receive(payload.msg);
+      this.contacts = payload.contacts;
     },
     chatMessage: function(message) {
       this.receive(message);
@@ -118,7 +123,7 @@ export default {
 }
 
 #messages-container {
-  width:75%;
+  width:73%;
   margin:auto;
   position:absolute;
   right:0px;
@@ -126,7 +131,7 @@ export default {
 
 #contacts-container {
   background: #FFF;
-  width:25%;
+  width:27%;
   margin:auto;
   position:absolute;
   left:0px;
@@ -186,5 +191,12 @@ svg {
   overflow: auto;
   padding-top: 10px;
   padding-bottom: 5%;
+}
+
+.contact{
+  width:100%;
+  height: 5%;
+  text-align: left;
+
 }
 </style>
