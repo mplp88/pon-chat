@@ -29,11 +29,11 @@ html, body {
 }
 
 #app{
-  height: 100%;;
-}
-
-body {
+  height: 100%;
+  width: 960px;
+  margin: auto;
   background-image: url('./assets/chat-background.png');
   background-repeat: repeat;
+  box-shadow: 2px 2px 15px 5px;
 }
 </style>

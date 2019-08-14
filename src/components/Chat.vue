@@ -1,18 +1,26 @@
 <template>
   <div id="chat-cont">
     <div v-if="!user.userName">
-      <div class="row">
-        <input class="form-control col-2 offset-5" type="text" v-model="userName">
+      <div class="">
+        <input class="form-control" type="text" v-model="userName">
       </div>
-      <div class="row">
-        <input class="btn btn-secondary col-2 offset-5" type="button" @click="setUserName" value="Asignar nombre de usuario"/>
+      <div class="">
+        <input class="btn btn-secondary" type="button" @click="setUserName" value="Asignar nombre de usuario"/>
       </div>
     </div>
     <div v-else>
       <div id="contacts-container">
+        <div>
+          <h2>Conectados</h2>
+        </div>
         <div class="contact" v-for="contact in contacts" v-bind:key="contact.id">
-          <img src="" alt="" class="contact-img"> {{ contact.userName }}
+          <div class="contact-img">
+            <img src="@/assets/noprofile.png" alt="profile photo">
           </div>
+          <div class="contact-info">
+            {{ contact.userName }} <span v-if="contact.id == user.id">(Yo)</span>
+          </div>
+        </div>
       </div>
       <div id="messages-container">
         <div v-if="!isConnected">
@@ -40,12 +48,13 @@ export default {
   data: function() {
     return {
       isConnected: false,
-      useName: '',
+      userName: '',
       chat: [],
       contacts: [],
       user: {
         id: -1,
-        userName: ''
+        userName: '',
+        profilePhoto: 'assets/noprofile.png'
       },
       message: {
         id: '',
@@ -71,15 +80,17 @@ export default {
     receive: function(msg) {
       let vm = this;
       vm.chat.push(msg); 
-      setTimeout(function() {window.scrollTo(0, document.getElementById('messages').scrollHeight+1000), 1000});
+      setTimeout(function() {
+        let chat = document.getElementById('chat');
+        chat.scrollTo(0, chat.scrollHeight+1000), 1000});
     },
     setUserName: function() {
       let vm = this;
       
-      if(this.userName != null && this.userName != '') {
+      if(vm.userName != null && vm.userName != '') {
         vm.user.id = Math.round(Math.random()*10000);
-        vm.user.userName = this.userName;
-        vm.$socket.emit('userConnected', this.user);
+        vm.user.userName = vm.userName;
+        vm.$socket.emit('userConnected', vm.user);
 
         setTimeout(function() {
           document.getElementById('message-text').focus();
@@ -117,21 +128,27 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 #chat-cont, #messages-container, #contacts-container {
   height: 100%;
 }
 
+#chat-cont {
+  width: 960px;
+  position: relative;
+  margin: auto;
+}
+
 #messages-container {
-  width:73%;
-  margin:auto;
-  position:absolute;
-  right:0px;
+  width: 768px;
+  margin: auto;
+  position: absolute;
+  right: 0px;
 }
 
 #contacts-container {
   background: #FFF;
-  width:27%;
+  width: 192px;
   margin:auto;
   position:absolute;
   left:0px;
@@ -142,9 +159,10 @@ export default {
   margin: auto;
   display: block;
   padding: 10px;
-  position: relative;
+  position: absolute;
   width: 100%;
-  height: 10%;
+  height: 80px;
+  bottom: 0px;
 }
 
 #message-text {
@@ -186,17 +204,49 @@ svg {
 }
 
 #chat {
+  overflow: hidden;
   display: block;
+  width:100%;
   height: 90%;
-  overflow: auto;
   padding-top: 10px;
   padding-bottom: 5%;
+  scroll-behavior: smooth;
+  position: absolute;
+  top: 0px;
 }
 
 .contact{
+  position: relative;
   width:100%;
-  height: 5%;
+  height: 10%;
   text-align: left;
+  padding: 10px;
+  margin: 10px;
+}
 
+.contact-info {
+  display: block;
+  text-align: left;
+  position: absolute;
+  right: 0px;
+  width: 70%;
+}
+
+.contact-img {
+  position: absolute;
+  left: 0px;
+  display: block;
+  background-color: #F4F4F4;
+  width: 20%;
+  border-radius: 50%;
+}
+
+.contact-img img{
+  position: relative;
+  display: inline-block;
+  height: 25px;
+  width: 25px;
+  overflow: hidden;
+  opacity: 0.7;
 }
 </style>

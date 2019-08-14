@@ -19,15 +19,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
     .message {
         display: inline-block;
         width: 100%;
+        word-break: break-all;
     }
 
     .chat-bubble {
-        padding: 10px;
-        margin: 10px;
+        padding: 5px 10px 5px 5px;
+        margin: 2px 15px 2px 15px;
         border-radius: 5px;
         box-shadow: 2px 2px 5px;
         min-width: 100px;
@@ -52,7 +53,7 @@ export default {
     }
 
     .chat-bubble.broadcast {
-        max-width: 50;
+        max-width: 350px;
         margin: auto;
         text-align: center;
         background-color: #ECE5DD;
