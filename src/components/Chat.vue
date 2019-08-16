@@ -204,15 +204,15 @@ svg {
 }
 
 #chat {
-  overflow: hidden;
+  overflow: auto;
   display: block;
   width:100%;
-  height: 90%;
+  height: 88%;
   padding-top: 10px;
   padding-bottom: 5%;
   scroll-behavior: smooth;
   position: absolute;
-  top: 0px;
+  top: 5px;
 }
 
 .contact{
@@ -249,4 +249,27 @@ svg {
   overflow: hidden;
   opacity: 0.7;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #777; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #333; 
+}
+
 </style>
