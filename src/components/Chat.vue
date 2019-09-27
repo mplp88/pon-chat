@@ -134,13 +134,13 @@ export default {
 }
 
 #chat-cont {
-  width: 960px;
+  width: 100%;
   position: relative;
   margin: auto;
 }
 
 #messages-container {
-  width: 768px;
+  width: 75%;
   margin: auto;
   position: absolute;
   right: 0px;
@@ -148,10 +148,12 @@ export default {
 
 #contacts-container {
   background: #FFF;
+  box-shadow: 2px 0px 5px;
   width: 192px;
   margin:auto;
   position:absolute;
   left:0px;
+  overflow: auto;
 }
 
 #message-form {
