@@ -10,7 +10,7 @@
           placeholder="Nombre de usuario..."
         />
       </div>
-      <div class="row">
+      <div>
         <input
           class="btn btn-secondary"
           type="button"
