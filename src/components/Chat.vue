@@ -139,7 +139,7 @@ export default {
   margin: auto;
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 999px) {
   #message-container {
     width: 98%;
   }
@@ -160,21 +160,23 @@ export default {
   }
 }
 
-#messages-container {
-  width: 75%;
-  margin: auto;
-  position: absolute;
-  right: 0px;
-}
+@media only screen and (min-width: 1000px) {
+  #messages-container {
+    width: 75%;
+    margin: auto;
+    position: absolute;
+    right: 0px;
+  }
 
-#contacts-container {
-  background: #FFF;
-  box-shadow: 2px 0px 5px;
-  width: 25%;
-  margin:auto;
-  position:absolute;
-  left:0px;
-  overflow: auto;
+  #contacts-container {
+    background: #FFF;
+    box-shadow: 2px 0px 5px;
+    width: 25%;
+    margin:auto;
+    position:absolute;
+    left:0px;
+    overflow: auto;
+  }
 }
 
 #message-form {
