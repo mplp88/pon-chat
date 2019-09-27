@@ -22,7 +22,7 @@
     <div v-else>
       <div id="contacts-container">
         <div>
-          <span v-if="showMenuIcon" class="contacts-icon">
+          <span v-if="showContactsIcon" class="contacts-icon">
             <i class="fas fa-bars"></i>
           </span>
           <h2>Conectados</h2>
@@ -127,7 +127,7 @@ export default {
     }
   },
   computed:{
-    showMenuIcon: function(){
+    showContactsIcon: function(){
       return window.innerWidth > 999;
     }
   },
@@ -184,16 +184,18 @@ export default {
     display: inline-block;
     line-height: 30px;
   }
+
   #message-container {
     width: 98%;
   }
 
   #contacts-container {
-    width: 2%;
+    width: 25%;
+    height: 25%;
     overflow: hidden;
     z-index: 1;
-    -webkit-transition: width 0.5s;
-    transition: width 0.5s;
+    -webkit-transition: width 5s, height .5s;;
+    transition: width 5s, height .5s;;
   }
 
   #contacts-container:hover {
