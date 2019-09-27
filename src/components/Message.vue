@@ -23,7 +23,7 @@ export default {
     .message {
         display: inline-block;
         width: 100%;
-        word-break: break-all;
+        word-break: break-word;
     }
 
     .chat-bubble {
