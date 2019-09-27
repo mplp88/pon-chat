@@ -2,23 +2,38 @@
   <div id="chat-cont">
     <div v-if="!user.userName" class="container">
       <div class="row">
-        <input class="form-control text-left" type="text" v-model="userName" style="margin:10px;" placeholder="Nombre de usuario...">
+        <input
+          class="form-control text-left"
+          type="text"
+          v-model="userName"
+          style="margin:10px;"
+          placeholder="Nombre de usuario..."
+        />
       </div>
-      <div>
-        <input class="btn btn-secondary" type="button" @click="setUserName" value="Asignar nombre de usuario"/>
+      <div class="row">
+        <input
+          class="btn btn-secondary"
+          type="button"
+          @click="setUserName"
+          value="Asignar nombre de usuario"
+        />
       </div>
     </div>
     <div v-else>
       <div id="contacts-container">
         <div>
+          <span v-if="showMenuIcon" class="contacts-icon">
+            <i class="fas fa-bars"></i>
+          </span>
           <h2>Conectados</h2>
         </div>
         <div class="contact" v-for="contact in contacts" v-bind:key="contact.id">
           <div class="contact-img">
-            <img src="@/assets/noprofile.png" alt="profile photo">
+            <img src="@/assets/noprofile.png" alt="profile photo" />
           </div>
           <div class="contact-info">
-            {{ contact.userName }} <span v-if="contact.id == user.id">(Yo)</span>
+            {{ contact.userName }}
+            <span v-if="contact.id == user.id">(Yo)</span>
           </div>
         </div>
       </div>
@@ -31,8 +46,15 @@
             <Message v-for="message in chat" :key="message.id" :message="message" :user="user" />
           </div>
           <form id="message-form" @submit.prevent="send">
-            <input id="message-text" v-model="message.text" autocomplete="off" placeholder="Escribe un mensaje aquí..." />
-            <button type="submit" id="message-send"><i class="fas fa-angle-right"></i></button>
+            <input
+              id="message-text"
+              v-model="message.text"
+              autocomplete="off"
+              placeholder="Escribe un mensaje aquí..."
+            />
+            <button type="submit" id="message-send">
+              <i class="fas fa-angle-right"></i>
+            </button>
           </form>
         </div>
       </div>
@@ -48,18 +70,18 @@ export default {
   data: function() {
     return {
       isConnected: false,
-      userName: '',
+      userName: "",
       chat: [],
       contacts: [],
       user: {
         id: -1,
-        userName: '',
-        profilePhoto: 'assets/noprofile.png'
+        userName: "",
+        profilePhoto: "assets/noprofile.png"
       },
       message: {
-        id: '',
+        id: "",
         userId: "1",
-        userName: '',
+        userName: "",
         text: "",
         incoming: false
       }
@@ -74,33 +96,39 @@ export default {
       vm.message.id = `${vm.user.id}_${vm.chat.length}`;
       vm.message.userId = vm.user.id;
       vm.message.userName = vm.user.userName;
-      vm.$socket.emit('chatMessage', vm.message);
-      vm.message.text = '';
+      vm.$socket.emit("chatMessage", vm.message);
+      vm.message.text = "";
     },
     receive: function(msg) {
       let vm = this;
-      vm.chat.push(msg); 
+      vm.chat.push(msg);
       setTimeout(function() {
-        let chat = document.getElementById('chat');
-        chat.scrollTo(0, chat.scrollHeight+1000), 1000});
+        let chat = document.getElementById("chat");
+        chat.scrollTo(0, chat.scrollHeight + 1000), 1000;
+      });
     },
     setUserName: function() {
       let vm = this;
-      
-      if(vm.userName != null && vm.userName != '') {
-        vm.user.id = Math.round(Math.random()*10000);
+
+      if (vm.userName != null && vm.userName != "") {
+        vm.user.id = Math.round(Math.random() * 10000);
         vm.user.userName = vm.userName;
-        vm.$socket.emit('userConnected', vm.user);
+        vm.$socket.emit("userConnected", vm.user);
 
         setTimeout(function() {
-          document.getElementById('message-text').focus();
+          document.getElementById("message-text").focus();
         }, 1000);
       }
     },
     disconnectUser: function() {
       let vm = this;
 
-      vm.$socket.emit('userDisconnected', vm.user);
+      vm.$socket.emit("userDisconnected", vm.user);
+    }
+  },
+  computed:{
+    showMenuIcon: function(){
+      return window.innerWidth > 999;
     }
   },
   sockets: {
@@ -123,7 +151,7 @@ export default {
     }
   },
   created: function() {
-    window.addEventListener('beforeunload', this.disconnectUser);
+    window.addEventListener("beforeunload", this.disconnectUser);
   }
 };
 </script>
@@ -146,10 +174,16 @@ export default {
   box-shadow: 2px 0px 5px;
   margin: auto;
   position: absolute;
-  left: 0px;  
+  left: 0px;
 }
 
 @media only screen and (max-width: 999px) {
+  #contacts-icon {
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    line-height: 30px;
+  }
   #message-container {
     width: 98%;
   }
