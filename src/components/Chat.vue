@@ -129,7 +129,9 @@ export default {
 </script>
 
 <style>
-#chat-cont, #messages-container, #contacts-container {
+#chat-cont,
+#messages-container,
+#contacts-container {
   height: 100%;
 }
 
@@ -139,19 +141,22 @@ export default {
   margin: auto;
 }
 
+#contacts-container {
+  background: #fff;
+  box-shadow: 2px 0px 5px;
+  margin: auto;
+  position: absolute;
+  left: 0px;  
+}
+
 @media only screen and (max-width: 999px) {
   #message-container {
     width: 98%;
   }
 
   #contacts-container {
-    background: #FFF;
-    box-shadow: 2px 0px 5px;
     width: 2%;
-    margin:auto;
-    position:absolute;
-    left:0px;
-    overflow: auto;
+    overflow: hidden;
     z-index: 99;
   }
 
@@ -169,18 +174,13 @@ export default {
   }
 
   #contacts-container {
-    background: #FFF;
-    box-shadow: 2px 0px 5px;
     width: 25%;
-    margin:auto;
-    position:absolute;
-    left:0px;
     overflow: auto;
   }
 }
 
 #message-form {
-  background-color: #EFEFEF;
+  background-color: #efefef;
   margin: auto;
   display: block;
   padding: 10px;
@@ -194,31 +194,31 @@ export default {
   position: absolute;
   text-align: left;
   outline: none;
-  bottom:0px;
-  left:0px;
+  bottom: 0px;
+  left: 0px;
   border: none;
   border-radius: 25px;
   padding: 10px;
   margin: 10px;
   height: 50px;
-  width:90%;  
+  width: 90%;
 }
 
 #message-send {
-  position:absolute;
+  position: absolute;
   right: 2%;
   bottom: 0px;
-  width:50px;
-  height:50px;
+  width: 50px;
+  height: 50px;
   margin: 10px;
-  padding:10px;
-  background: #128C7E;
+  padding: 10px;
+  background: #128c7e;
   border: none;
   border-radius: 50%;
 }
 
 svg {
-  color: #FFF;
+  color: #fff;
 }
 
 #messages {
@@ -231,7 +231,7 @@ svg {
 #chat {
   overflow: auto;
   display: block;
-  width:100%;
+  width: 100%;
   height: 88%;
   padding-top: 10px;
   padding-bottom: 5%;
@@ -240,9 +240,9 @@ svg {
   top: 5px;
 }
 
-.contact{
+.contact {
   position: relative;
-  width:95%;
+  width: 95%;
   height: 10%;
   text-align: left;
   padding: 10px;
@@ -261,12 +261,12 @@ svg {
   position: absolute;
   left: 0px;
   display: block;
-  background-color: #F4F4F4;
+  background-color: #f4f4f4;
   width: 20%;
   border-radius: 50%;
 }
 
-.contact-img img{
+.contact-img img {
   position: relative;
   display: inline-block;
   height: 25px;
@@ -282,19 +282,18 @@ svg {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px grey; 
+  box-shadow: inset 0 0 5px grey;
   border-radius: 10px;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #777; 
+  background: #777;
   border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #333; 
+  background: #333;
 }
-
 </style>
