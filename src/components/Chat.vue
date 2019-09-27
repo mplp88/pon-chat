@@ -219,7 +219,7 @@ svg {
 
 .contact{
   position: relative;
-  width:100%;
+  width:95%;
   height: 10%;
   text-align: left;
   padding: 10px;
