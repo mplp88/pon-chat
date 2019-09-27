@@ -194,12 +194,13 @@ export default {
     height: 25px;
     overflow: hidden;
     z-index: 1;
-    -webkit-transition: width 5s, height 0.5s;
-    transition: width 5s, height 0.5s;
+    -webkit-transition: width .5s, height .5s;
+    transition: width .5s, height .5s;
   }
 
   #contacts-container:hover {
     width: 80%;
+    height: 100%;
     z-index: 99;
   }
 }
