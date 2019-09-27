@@ -1,10 +1,10 @@
 <template>
   <div id="chat-cont">
-    <div v-if="!user.userName">
-      <div class="">
-        <input class="form-control" type="text" v-model="userName">
+    <div v-if="!user.userName" class="container">
+      <div class="row">
+        <input class="form-control text-left" type="text" v-model="userName" style="margin:10px;" placeholder="Nombre de usuario...">
       </div>
-      <div class="">
+      <div class="row">
         <input class="btn btn-secondary" type="button" @click="setUserName" value="Asignar nombre de usuario"/>
       </div>
     </div>
@@ -149,7 +149,7 @@ export default {
 #contacts-container {
   background: #FFF;
   box-shadow: 2px 0px 5px;
-  width: 192px;
+  width: 25%;
   margin:auto;
   position:absolute;
   left:0px;
