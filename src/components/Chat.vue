@@ -22,7 +22,7 @@
     <div v-else>
       <div id="contacts-container">
         <div>
-          <span v-if="showContactsIcon" class="contacts-icon">
+          <span v-if="showMenuIcon" class="contacts-icon">
             <i class="fas fa-bars"></i>
           </span>
           <h2>Conectados</h2>
@@ -126,9 +126,9 @@ export default {
       vm.$socket.emit("userDisconnected", vm.user);
     }
   },
-  computed:{
-    showContactsIcon: function(){
-      return window.innerWidth > 999;
+  computed: {
+    showMenuIcon: function() {
+      return window.innerWidth < 999;
     }
   },
   sockets: {
@@ -178,7 +178,7 @@ export default {
 }
 
 @media only screen and (max-width: 999px) {
-  #contacts-icon {
+  .contacts-icon {
     width: 25px;
     height: 25px;
     display: inline-block;
@@ -190,12 +190,12 @@ export default {
   }
 
   #contacts-container {
-    width: 25%;
-    height: 25%;
+    width: 25px;
+    height: 25px;
     overflow: hidden;
     z-index: 1;
-    -webkit-transition: width 5s, height .5s;;
-    transition: width 5s, height .5s;;
+    -webkit-transition: width 5s, height 0.5s;
+    transition: width 5s, height 0.5s;
   }
 
   #contacts-container:hover {
