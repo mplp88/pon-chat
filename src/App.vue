@@ -28,12 +28,24 @@ html, body {
   height: 100%;
 }
 
-#app{
-  height: 90%;
-  width: 80%;
-  margin: 10px auto;
-  background-image: url('./assets/chat-background.png');
+#app {
+  background-image: url("./assets/chat-background.png");
   background-repeat: repeat;
-  box-shadow: 2px 2px 15px 5px;
+}
+
+@media only screen and (max-width: 999px) {
+  #app {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  #app {
+    height: 90%;
+    width: 80%;
+    margin: 10px auto;
+    box-shadow: 2px 2px 15px 5px;
+  }
 }
 </style>
