@@ -139,6 +139,27 @@ export default {
   margin: auto;
 }
 
+@media only screen and (max-width: 1000px) {
+  #message-container {
+    width: 98%;
+  }
+
+  #contacts-container {
+    background: #FFF;
+    box-shadow: 2px 0px 5px;
+    width: 2%;
+    margin:auto;
+    position:absolute;
+    left:0px;
+    overflow: auto;
+    z-index: 99;
+  }
+
+  #contacts-container:hover {
+    width: 50%;
+  }
+}
+
 #messages-container {
   width: 75%;
   margin: auto;
