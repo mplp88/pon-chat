@@ -157,11 +157,14 @@ export default {
   #contacts-container {
     width: 2%;
     overflow: hidden;
-    z-index: 99;
+    z-index: 1;
+    -webkit-transition: width 0.5s;
+    transition: width 0.5s;
   }
 
   #contacts-container:hover {
-    width: 50%;
+    width: 80%;
+    z-index: 99;
   }
 }
 
@@ -188,6 +191,7 @@ export default {
   width: 100%;
   height: 80px;
   bottom: 0px;
+  z-index: 2;
 }
 
 #message-text {
