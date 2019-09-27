@@ -5,7 +5,7 @@ import io from 'socket.io-client'
 import VueSocketIo from 'vue-socket.io'
 
 Vue.config.productionTip = false
-export const SocketInstance = io('http://192.168.1.104:3002');
+export const SocketInstance = io('http://localhost:3002');
 
 Vue.use(new VueSocketIo({
   debug: true,
