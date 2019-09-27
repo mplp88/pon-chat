@@ -4,7 +4,7 @@
       <div class="row">
         <input class="form-control text-left" type="text" v-model="userName" style="margin:10px;" placeholder="Nombre de usuario...">
       </div>
-      <div class="row">
+      <div>
         <input class="btn btn-secondary" type="button" @click="setUserName" value="Asignar nombre de usuario"/>
       </div>
     </div>
