@@ -11,6 +11,11 @@ export default {
   name: 'app',
   components: {
     Chat
+  },
+  mounted: function() {
+    if(Notification.permission !== 'denied'){
+      Notification.requestPermission();
+    }
   }
 }
 </script>

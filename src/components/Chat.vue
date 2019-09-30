@@ -102,6 +102,16 @@ export default {
     receive: function(msg) {
       let vm = this;
       vm.chat.push(msg);
+      if(msg.userId != vm.user.id) {
+        let notif;
+        if(msg.isBroadcast) {
+          notif = new Notification(msg.text);
+        } else {
+          notif = new Notification('Nuevo mensaje', {
+            body: msg.userName + ': ' + msg.text
+          });
+        }
+      }
       setTimeout(function() {
         let chat = document.getElementById("chat");
         chat.scrollTo(0, chat.scrollHeight + 1000), 1000;
@@ -194,8 +204,8 @@ export default {
     height: 25px;
     overflow: hidden;
     z-index: 1;
-    -webkit-transition: width .5s, height .5s;
-    transition: width .5s, height .5s;
+    -webkit-transition: width 0.5s, height 0.5s;
+    transition: width 0.5s, height 0.5s;
   }
 
   #contacts-container:hover {
