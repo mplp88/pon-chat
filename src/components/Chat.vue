@@ -157,7 +157,7 @@ export default {
       vm.$socket.emit("refreshContacts");
       let el = document.querySelector(".fa-sync-alt");
       if (el) {
-        el.classList.add("spin");
+        el.classList.add("fa-spin");
       }
     },
     logout: function() {
