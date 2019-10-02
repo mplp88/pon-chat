@@ -20,12 +20,25 @@
       </div>
     </div>
     <div v-else>
-      <div id="contacts-container">
+      <div id="contacts-container" v-if="isConnected">
         <div>
-          <span v-if="showMenuIcon" class="contacts-icon">
+          <span v-if="showMenuIcon" class="icon">
             <i class="fas fa-bars"></i>
           </span>
           <h2>Conectados</h2>
+          <div>
+            <span
+              class="refresh"
+              @click="refreshContacts"
+              data-toggle="tooltip"
+              title="Refrescar"
+            >
+              <strong>
+                Refrescar lista
+                <i class="fas fa-sync-alt"></i>
+              </strong>
+            </span>
+          </div>
         </div>
         <div class="contact" v-for="contact in contacts" v-bind:key="contact.id">
           <div class="contact-img">
@@ -33,7 +46,13 @@
           </div>
           <div class="contact-info">
             {{ contact.userName }}
-            <span v-if="contact.id == user.id">(Yo)</span>
+            <span v-if="contact.id == user.id">
+              (Yo)
+              <span class="logout" @click="logout">
+                <strong class="logout">Salir</strong>
+                <i class="fas fa-sign-out-alt"></i>
+              </span>
+            </span>
           </div>
         </div>
       </div>
@@ -63,7 +82,7 @@
 </template>
 
 <script>
-//import swal from 'sweetalert'
+import swal from "sweetalert";
 import Message from "./Message";
 
 export default {
@@ -73,11 +92,7 @@ export default {
       userName: "",
       chat: [],
       contacts: [],
-      user: {
-        id: -1,
-        userName: "",
-        profilePhoto: "assets/noprofile.png"
-      },
+      user: {},
       message: {
         id: "",
         userId: "1",
@@ -102,13 +117,13 @@ export default {
     receive: function(msg) {
       let vm = this;
       vm.chat.push(msg);
-      if(msg.userId != vm.user.id) {
+      if (msg.userId != vm.user.id) {
         let notif;
-        if(msg.isBroadcast) {
+        if (msg.isBroadcast) {
           notif = new Notification(msg.text);
         } else {
-          notif = new Notification('Nuevo mensaje', {
-            body: msg.userName + ': ' + msg.text
+          notif = new Notification("Nuevo mensaje", {
+            body: msg.userName + ": " + msg.text
           });
         }
       }
@@ -123,7 +138,9 @@ export default {
       if (vm.userName != null && vm.userName != "") {
         vm.user.id = Math.round(Math.random() * 10000);
         vm.user.userName = vm.userName;
+        vm.$store.commit("setUser", vm.user);
         vm.$socket.emit("userConnected", vm.user);
+        vm.$socket.emit("refreshContacts");
 
         setTimeout(function() {
           document.getElementById("message-text").focus();
@@ -132,8 +149,47 @@ export default {
     },
     disconnectUser: function() {
       let vm = this;
-
+      vm.$store.commit("disconnectUser");
       vm.$socket.emit("userDisconnected", vm.user);
+    },
+    refreshContacts: function() {
+      let vm = this;
+      vm.$socket.emit("refreshContacts");
+      let el = document.querySelector(".fa-sync-alt");
+      if (el) {
+        el.classList.add("spin");
+      }
+    },
+    logout: function() {
+      swal({
+        title: "Saliendo",
+        text: "¿Seguro que querés salir?",
+        icon: "warning",
+        dangerMode: true,
+        buttons: [
+          "Cancelar",
+          {
+            text: "Salir",
+            closeModal: false
+          }
+        ]
+      })
+        .then(ok => {
+          if (ok) {
+            let vm = this;
+            vm.disconnectUser();
+            vm.user = {
+              id: -1,
+              userName: "",
+              profilePhoto: "assets/noprofile.png"
+            };
+          }
+        })
+        .then(() => {
+          setTimeout(() => {
+            swal.close();
+          }, 500);
+        });
     }
   },
   computed: {
@@ -150,18 +206,32 @@ export default {
     },
     userConnected: function(payload) {
       this.receive(payload.msg);
-      this.contacts = payload.contacts;
     },
     userDisconnected: function(payload) {
       this.receive(payload.msg);
-      this.contacts = payload.contacts;
     },
     chatMessage: function(message) {
       this.receive(message);
+    },
+    refreshContacts: function(contacts) {
+      this.contacts = contacts;
+      let el = document.querySelector(".fa-sync-alt.spin");
+      if (el) {
+        el.classList.remove("spin");
+      }
     }
   },
-  created: function() {
-    window.addEventListener("beforeunload", this.disconnectUser);
+  mounted: function() {
+    let vm = this;
+    vm.user = vm.$store.getters.getUser;
+    if (vm.user.id > 0) {
+      vm.$socket.emit("userConnected", vm.user);
+      vm.$socket.emit("refreshContacts");
+    }
+    if (window.jQuery) {
+      $('[data-toggle="tooltip"]').tooltip();
+    }
+    window.addEventListener("beforeunload", vm.disconnectUser);
   }
 };
 </script>
@@ -187,10 +257,18 @@ export default {
   left: 0px;
 }
 
+.refresh, .logout {
+  cursor: pointer;
+}
+
+.logout {
+  color: red;
+}
+
 @media only screen and (max-width: 999px) {
-  .contacts-icon {
-    width: 25px;
-    height: 25px;
+  .icon {
+    width: 50px;
+    height: 50px;
     display: inline-block;
     line-height: 30px;
   }
@@ -200,8 +278,8 @@ export default {
   }
 
   #contacts-container {
-    width: 25px;
-    height: 25px;
+    width: 50px;
+    height: 50px;
     overflow: hidden;
     z-index: 1;
     -webkit-transition: width 0.5s, height 0.5s;
