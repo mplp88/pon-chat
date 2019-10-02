@@ -215,9 +215,9 @@ export default {
     },
     refreshContacts: function(contacts) {
       this.contacts = contacts;
-      let el = document.querySelector(".fa-sync-alt.spin");
+      let el = document.querySelector(".fa-sync-alt.fa-spin");
       if (el) {
-        el.classList.remove("spin");
+        el.classList.remove("fa-spin");
       }
     }
   },
