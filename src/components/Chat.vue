@@ -27,12 +27,7 @@
           </span>
           <h2>Conectados</h2>
           <div>
-            <span
-              class="refresh"
-              @click="refreshContacts"
-              data-toggle="tooltip"
-              title="Refrescar"
-            >
+            <span class="refresh" @click="refreshContacts" data-toggle="tooltip" title="Refrescar">
               <strong>
                 Refrescar lista
                 <i class="fas fa-sync-alt"></i>
@@ -118,13 +113,18 @@ export default {
       let vm = this;
       vm.chat.push(msg);
       if (msg.userId != vm.user.id) {
-        let notif;
-        if (msg.isBroadcast) {
-          notif = new Notification(msg.text);
-        } else {
-          notif = new Notification("Nuevo mensaje", {
-            body: msg.userName + ": " + msg.text
-          });
+        if (!document.hasFocus()) {
+          let notif;
+          if (msg.isBroadcast) {
+            notif = new Notification(msg.text);
+          } else {
+            notif = new Notification("Nuevo mensaje", {
+              body: msg.userName + ": " + msg.text
+            });
+          }
+          notif.onclick = () => {
+            window.focus();
+          };
         }
       }
       setTimeout(function() {
@@ -215,9 +215,9 @@ export default {
     },
     refreshContacts: function(contacts) {
       this.contacts = contacts;
-      let el = document.querySelector(".fa-sync-alt.spin");
+      let el = document.querySelector(".fa-sync-alt.fa-spin");
       if (el) {
-        el.classList.remove("spin");
+        el.classList.remove("fa-spin");
       }
     }
   },
@@ -228,9 +228,7 @@ export default {
       vm.$socket.emit("userConnected", vm.user);
       vm.$socket.emit("refreshContacts");
     }
-    if (window.jQuery) {
-      $('[data-toggle="tooltip"]').tooltip();
-    }
+    window.jQuery('[data-toggle="tooltip"]').tooltip();
     window.addEventListener("beforeunload", vm.disconnectUser);
   }
 };
@@ -257,7 +255,8 @@ export default {
   left: 0px;
 }
 
-.refresh, .logout {
+.refresh,
+.logout {
   cursor: pointer;
 }
 
