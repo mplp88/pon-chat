@@ -129,8 +129,8 @@ export default {
       }
       setTimeout(function() {
         let chat = document.getElementById("chat");
-        chat.scrollTo(0, chat.scrollHeight + 1000), 1000;
-      });
+        chat.scrollTo(0, chat.scrollHeight + 1000);
+      }, 1000);
     },
     setUserName: function() {
       let vm = this;
