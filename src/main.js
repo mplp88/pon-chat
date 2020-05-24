@@ -5,6 +5,7 @@ import io from 'socket.io-client'
 import VueSocketIo from 'vue-socket.io'
 
 Vue.config.productionTip = false
+//export const SocketInstance = io('https://localhost:3002/');
 export const SocketInstance = io('https://pon-chat-back.herokuapp.com/');
 
 Vue.use(new VueSocketIo({
