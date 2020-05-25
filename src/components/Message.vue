@@ -2,7 +2,12 @@
   <div class="message">
     <div class="chat-bubble" :class="{ incoming: incoming, broadcast: message.isBroadcast }">
       <span v-if="!message.isBroadcast" class="username">{{ message.userName }}:</span>
-      {{ message.text }}
+      <span class="col-10">{{ message.text }}</span>
+      <i
+        v-if="!message.isBroadcast"
+        class="col-2"
+        :class="{ far: sending, fas: !sending, 'fa-clock': sending, 'fa-check': sent, 'fa-check-double': received, seen: seen }"
+      ></i>
     </div>
   </div>
 </template>
@@ -14,6 +19,22 @@ export default {
     incoming: function() {
       let vm = this;
       return vm.message.userId != vm.user.id && !vm.message.isBroadcast;
+    },
+    sending: function() {
+      let vm = this;
+      return vm.message.status == "sending";
+    },
+    sent: function() {
+      let vm = this;
+      return vm.message.status == "sent";
+    },
+    received: function() {
+      let vm = this;
+      return vm.message.status == "received";
+    },
+    seen: function() {
+      let vm = this;
+      return vm.message.status == "seen";
     }
   }
 };

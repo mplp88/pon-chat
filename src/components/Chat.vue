@@ -1,23 +1,19 @@
 <template>
   <div id="chat-cont">
     <div v-if="!user.userName" class="container">
-      <div class="row">
-        <input
-          class="form-control text-left"
-          type="text"
-          v-model="userName"
-          style="margin:10px;"
-          placeholder="Nombre de usuario..."
-        />
-      </div>
-      <div>
-        <input
-          class="btn btn-secondary"
-          type="button"
-          @click="setUserName"
-          value="Asignar nombre de usuario"
-        />
-      </div>
+      <form @submit.prevent="setUserName">
+        <div class="form-group">
+          <input
+            id="username"
+            name="username"
+            class="form-control text-left"
+            type="text"
+            v-model="userName"
+            placeholder="Nombre de usuario..."
+          />
+        </div>
+        <input class="btn btn-secondary" type="submit" value="Asignar nombre de usuario" />
+      </form>
     </div>
     <div v-else>
       <div id="contacts-container" v-if="isConnected">
@@ -103,15 +99,31 @@ export default {
   methods: {
     send: function() {
       let vm = this;
+
       vm.message.id = `${vm.user.id}_${vm.chat.length}`;
       vm.message.userId = vm.user.id;
       vm.message.userName = vm.user.userName;
-      vm.$socket.emit("chatMessage", vm.message);
+      vm.message.status = "sending";
+      let message = {
+        id: vm.message.id,
+        userId: vm.message.userId,
+        userName: vm.message.userName,
+        status: vm.message.status,
+        text: vm.message.text
+      };
+      vm.chat.push(message);
+      vm.$socket.emit("chatMessage", message);
       vm.message.text = "";
     },
     receive: function(msg) {
       let vm = this;
-      vm.chat.push(msg);
+      let message = vm.chat.find(c => c.id == msg.id);
+      if (!message) {
+        vm.chat.push(msg);
+      } else {
+        message.status = "sent";
+      }
+
       if (msg.userId != vm.user.id) {
         if (!document.hasFocus()) {
           let notif;
@@ -131,6 +143,10 @@ export default {
         let chat = document.getElementById("chat");
         chat.scrollTo(0, chat.scrollHeight + 1000);
       }, 1000);
+    },
+    updateStatus: function(msg) {
+      let vm = this;
+      vm.chat.find(c => c.id == msg.id).status = msg.status;
     },
     setUserName: function() {
       let vm = this;
@@ -212,6 +228,9 @@ export default {
     },
     chatMessage: function(message) {
       this.receive(message);
+    },
+    updateMessageStatus: function(message) {
+      this.updateStatus(message);
     },
     refreshContacts: function(contacts) {
       this.contacts = contacts;
