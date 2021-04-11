@@ -12,7 +12,11 @@
             placeholder="Nombre de usuario..."
           />
         </div>
-        <input class="btn btn-secondary" type="submit" value="Asignar nombre de usuario" />
+        <input
+          class="btn btn-secondary"
+          type="submit"
+          value="Asignar nombre de usuario"
+        />
       </form>
     </div>
     <div v-else>
@@ -23,7 +27,12 @@
           </span>
           <h2>Conectados</h2>
           <div>
-            <span class="refresh" @click="refreshContacts" data-toggle="tooltip" title="Refrescar">
+            <span
+              class="refresh"
+              @click="refreshContacts"
+              data-toggle="tooltip"
+              title="Refrescar"
+            >
               <strong>
                 Refrescar lista
                 <i class="fas fa-sync-alt"></i>
@@ -31,7 +40,11 @@
             </span>
           </div>
         </div>
-        <div class="contact" v-for="contact in contacts" v-bind:key="contact.id">
+        <div
+          class="contact"
+          v-for="contact in contacts"
+          v-bind:key="contact.id"
+        >
           <div class="contact-img">
             <img src="@/assets/noprofile.png" alt="profile photo" />
           </div>
@@ -53,7 +66,12 @@
         </div>
         <div id="messages" v-else>
           <div id="chat">
-            <Message v-for="message in chat" :key="message.id" :message="message" :user="user" />
+            <Message
+              v-for="message in chat"
+              :key="message.id"
+              :message="message"
+              :user="user"
+            />
           </div>
           <form id="message-form" @submit.prevent="send">
             <input
@@ -77,7 +95,7 @@ import swal from "sweetalert";
 import Message from "./Message";
 
 export default {
-  data: function() {
+  data: function () {
     return {
       isConnected: false,
       userName: "",
@@ -89,15 +107,15 @@ export default {
         userId: "1",
         userName: "",
         text: "",
-        incoming: false
-      }
+        incoming: false,
+      },
     };
   },
   components: {
-    Message
+    Message,
   },
   methods: {
-    send: function() {
+    send: function () {
       let vm = this;
 
       vm.message.id = `${vm.user.id}_${vm.chat.length}`;
@@ -109,19 +127,23 @@ export default {
         userId: vm.message.userId,
         userName: vm.message.userName,
         status: vm.message.status,
-        text: vm.message.text
+        text: vm.message.text,
       };
       vm.chat.push(message);
       vm.$socket.emit("chatMessage", message);
       vm.message.text = "";
     },
-    receive: function(msg) {
+    receive: function (msg) {
       let vm = this;
-      let message = vm.chat.find(c => c.id == msg.id);
-      if (!message) {
+
+      if (!vm.chat.find((x) => x.id == msg.id)) {
         vm.chat.push(msg);
+        if (vm.isIncoming(msg)) {
+          msg.status = "received";
+          vm.$socket.emit("updateStatus", msg);
+        }
       } else {
-        message.status = "sent";
+        vm.updateStatus(msg);
       }
 
       if (msg.userId != vm.user.id) {
@@ -131,7 +153,7 @@ export default {
             notif = new Notification(msg.text);
           } else {
             notif = new Notification("Nuevo mensaje", {
-              body: msg.userName + ": " + msg.text
+              body: msg.userName + ": " + msg.text,
             });
           }
           notif.onclick = () => {
@@ -139,16 +161,18 @@ export default {
           };
         }
       }
-      setTimeout(function() {
+      setTimeout(function () {
         let chat = document.getElementById("chat");
         chat.scrollTo(0, chat.scrollHeight + 1000);
       }, 1000);
     },
-    updateStatus: function(msg) {
+    updateStatus: function (msg) {
       let vm = this;
-      vm.chat.find(c => c.id == msg.id).status = msg.status;
+      // console.log(`updating message id: ${msg.id}`);
+      // console.log(`status: ${msg.status}`);
+      vm.chat.find((c) => c.id == msg.id).status = msg.status;
     },
-    setUserName: function() {
+    setUserName: function () {
       let vm = this;
 
       if (vm.userName != null && vm.userName != "") {
@@ -158,17 +182,17 @@ export default {
         vm.$socket.emit("userConnected", vm.user);
         vm.$socket.emit("refreshContacts");
 
-        setTimeout(function() {
+        setTimeout(function () {
           document.getElementById("message-text").focus();
         }, 1000);
       }
     },
-    disconnectUser: function() {
+    disconnectUser: function () {
       let vm = this;
       vm.$store.commit("disconnectUser");
       vm.$socket.emit("userDisconnected", vm.user);
     },
-    refreshContacts: function() {
+    refreshContacts: function () {
       let vm = this;
       vm.$socket.emit("refreshContacts");
       let el = document.querySelector(".fa-sync-alt");
@@ -176,7 +200,7 @@ export default {
         el.classList.add("fa-spin");
       }
     },
-    logout: function() {
+    logout: function () {
       swal({
         title: "Saliendo",
         text: "¿Seguro que querés salir?",
@@ -186,18 +210,18 @@ export default {
           "Cancelar",
           {
             text: "Salir",
-            closeModal: false
-          }
-        ]
+            closeModal: false,
+          },
+        ],
       })
-        .then(ok => {
+        .then((ok) => {
           if (ok) {
             let vm = this;
             vm.disconnectUser();
             vm.user = {
               id: -1,
               userName: "",
-              profilePhoto: "assets/noprofile.png"
+              profilePhoto: "assets/noprofile.png",
             };
           }
         })
@@ -206,41 +230,45 @@ export default {
             swal.close();
           }, 500);
         });
-    }
+    },
+    isIncoming: function (msg) {
+      let vm = this;
+      return msg.userId != vm.user.id && !msg.isBroadcast;
+    },
   },
   computed: {
-    showMenuIcon: function() {
+    showMenuIcon: function () {
       return window.innerWidth < 999;
-    }
+    },
   },
   sockets: {
-    connect: function() {
+    connect: function () {
       this.isConnected = true;
     },
-    disconnect: function() {
+    disconnect: function () {
       this.isConnected = false;
     },
-    userConnected: function(payload) {
+    userConnected: function (payload) {
       this.receive(payload.msg);
     },
-    userDisconnected: function(payload) {
+    userDisconnected: function (payload) {
       this.receive(payload.msg);
     },
-    chatMessage: function(message) {
+    chatMessage: function (message) {
       this.receive(message);
     },
-    updateMessageStatus: function(message) {
+    updateMessageStatus: function (message) {
       this.updateStatus(message);
     },
-    refreshContacts: function(contacts) {
+    refreshContacts: function (contacts) {
       this.contacts = contacts;
       let el = document.querySelector(".fa-sync-alt.fa-spin");
       if (el) {
         el.classList.remove("fa-spin");
       }
-    }
+    },
   },
-  mounted: function() {
+  mounted: function () {
     let vm = this;
     vm.user = vm.$store.getters.getUser;
     if (vm.user.id > 0) {
@@ -249,7 +277,7 @@ export default {
     }
     window.jQuery('[data-toggle="tooltip"]').tooltip();
     window.addEventListener("beforeunload", vm.disconnectUser);
-  }
+  },
 };
 </script>
 

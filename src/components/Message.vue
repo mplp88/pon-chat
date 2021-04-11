@@ -1,12 +1,24 @@
 <template>
   <div class="message">
-    <div class="chat-bubble" :class="{ incoming: incoming, broadcast: message.isBroadcast }">
-      <span v-if="!message.isBroadcast" class="username">{{ message.userName }}:</span>
+    <div
+      class="chat-bubble"
+      :class="{ incoming: incoming, broadcast: message.isBroadcast }"
+    >
+      <span v-if="!message.isBroadcast" class="username"
+        >{{ message.userName }}:</span
+      >
       <span class="col-10">{{ message.text }}</span>
       <i
-        v-if="!message.isBroadcast"
+        v-if="!message.isBroadcast && !incoming"
         class="col-2"
-        :class="{ far: sending, fas: !sending, 'fa-clock': sending, 'fa-check': sent, 'fa-check-double': received, seen: seen }"
+        :class="{
+          far: sending,
+          fas: !sending,
+          'fa-clock': sending,
+          'fa-check': sent,
+          'fa-check-double': received,
+          seen: seen,
+        }"
       ></i>
     </div>
   </div>
@@ -16,27 +28,27 @@
 export default {
   props: ["message", "user"],
   computed: {
-    incoming: function() {
+    incoming: function () {
       let vm = this;
       return vm.message.userId != vm.user.id && !vm.message.isBroadcast;
     },
-    sending: function() {
+    sending: function () {
       let vm = this;
       return vm.message.status == "sending";
     },
-    sent: function() {
+    sent: function () {
       let vm = this;
       return vm.message.status == "sent";
     },
-    received: function() {
+    received: function () {
       let vm = this;
       return vm.message.status == "received";
     },
-    seen: function() {
+    seen: function () {
       let vm = this;
       return vm.message.status == "seen";
-    }
-  }
+    },
+  },
 };
 </script>
 
